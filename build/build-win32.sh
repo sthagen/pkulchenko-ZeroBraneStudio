@@ -185,9 +185,9 @@ fi
 if [ $BUILD_54 ]; then
   LUAV="54"
   LUAS=$LUAV
-  LUA_BASENAME="lua-5.4.0-work1"
+  LUA_BASENAME="lua-5.4.2"
   LUA_FILENAME="$LUA_BASENAME.tar.gz"
-  LUA_URL="http://www.lua.org/work/$LUA_FILENAME"
+  LUA_URL="http://www.lua.org/ftp/$LUA_FILENAME"
   LUA_COMPAT="MYCFLAGS=-DLUA_COMPAT_MODULE"
 fi
 
@@ -221,6 +221,8 @@ if [ $BUILD_LUA ]; then
 #define l_seeknum off64_t
 #endif
 EOF
+    # add -static to remove dependencies on mingw/libc dlls
+    sed -i "s/-shared -o/-static -shared -o/" src/Makefile
     make mingw $LUA_COMPAT || { echo "Error: failed to build Lua"; exit 1; }
     make install INSTALL_TOP="$INSTALL_DIR"
   fi
